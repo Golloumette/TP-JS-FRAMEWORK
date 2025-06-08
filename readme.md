@@ -11,5 +11,5 @@ entrer dans le dossier
 lancer un npm install
 
 ## Etape 4 ##
-
+lancer npm run dev 
 

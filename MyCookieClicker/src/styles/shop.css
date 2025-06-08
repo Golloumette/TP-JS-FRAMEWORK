@@ -1,0 +1,52 @@
+#game-shop {
+    
+    height: 100%;
+    right: 0;
+    width: 340px;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+   
+    background-image:  url("src/assets/shop.png");
+    background-position: top;
+    background-size: cover;
+    border: solid 1px black;
+    box-sizing: border-box;
+    flex-direction: column;
+    
+  }
+  #img-shop {
+    width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+  }
+  #game-shop h2 {
+    text-align: center;
+    margin-bottom: 5px;
+    color:#d3925d;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* Contour noir */
+  }
+  
+  #game-shop button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+    background-color: rgba(255,255,255,0.2);
+    border-width: 2px;
+    border-color : white ;
+    border-style: dashed solid;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top:8vh;
+    margin-bottom:2vh;
+
+  }
+  
+  #game-shop button:hover {
+    background-color: hsl(56, 56%, 60%);
+   
+  }
+ 

@@ -1,8 +1,13 @@
 import { ClickableArea } from "./clickable-area";
+import "../styles/game.css";
+import { Shop } from "./shop";
+import { RandomSpawn } from "./random-spawn";
+
 
 export class Game {
   // Game Properties
   cookies = 0;
+  passiveGain = 0;
 
   // Game Elements
   gameElement = null;
@@ -10,57 +15,102 @@ export class Game {
 
   // Game Components
   clickableArea = null;
+  shop = null;
 
   constructor(config) {
-    // Récupère le nombre de cookie de base via la configuration.
+    // Récupère le nombre de cookies de base via la configuration.
     this.cookies = config.cookies;
-    // Récupère l'élément avec l'id game.
+
+    // Récupère l'élément avec l'id #game.
     this.gameElement = document.querySelector("#game");
-    // Crée le composant ClickableArea qui gère la logique de la zone cliquable.
-    // On passe en argument l'élément Game pour permettre l'ajout d'HTML à l'intérieur.
-    // Et une fonction Callback pour réagir à l'événement de clique.
+    this.randomSpawn = new RandomSpawn(this.gameElement, this);
+
+
+    // Initialise la zone cliquable.
     this.clickableArea = new ClickableArea(
       this.gameElement,
       this.onClickableAreaClick
     );
+
+    // Initialise la boutique.
+    this.shop = new Shop(
+      this.gameElement,
+      this.onItemClick
+    );
   }
 
-  // Lance le jeu
+  // Démarre la boucle de jeu (gain passif).
   start() {
     this.render();
+    this.randomSpawn.start();
+    setInterval(() => {
+      this.cookies += this.passiveGain;
+      window.requestAnimationFrame(() => {
+        this.updateScore();
+      });
+    }, 1000);
   }
 
-  // Génère les éléments à afficher.
+  // Rend les éléments du jeu.
   render() {
-    this.renderScore();
-    this.clickableArea.render();
+    const section_game = document.createElement("section");
+    section_game.id = "section_game";
+
+    this.renderScore(section_game);
+    this.clickableArea.render(section_game);
+    this.gameElement.append(section_game);
+
+    this.shop.render();
   }
 
-  // Génère l'affichage du score.
-  renderScore() {
-    this.scoreElement = document.createElement("section");
-	this.scoreElement.id = "game-score";
-    this.gameElement.append(this.scoreElement);
+  // Crée l’affichage du score.
+  renderScore(parentElement) {
+    // Titre
+    const titleEl = document.createElement("div");
+    titleEl.id = "title";
+    titleEl.innerHTML = `<h1>Bienvenue sur Cookie Clicker !</h1>`;
+    parentElement.append(titleEl);
+
+    // Score
+    this.scoreElement = document.createElement("div");
+    this.scoreElement.id = "game-score";
+    parentElement.append(this.scoreElement);
+
     this.updateScore();
   }
 
-  // Met à jour l'affichage du score.
+  // Met à jour le score à l’écran.
   updateScore() {
     this.scoreElement.innerHTML = `
-        <span>${this.cookies} cookies</span>
+      <span>${this.cookies} cookies — ${this.passiveGain} bonus</span>
     `;
   }
 
-  // Ici on utilise une fonction fléchée pour avoir encore accès au this de Game.
-  // Sans fonction fléchée, le this serait celui de l'élément lié au click.
+  // Clic manuel sur le cookie.
   onClickableAreaClick = () => {
-    // On ajoute 1 point aux cookies pour chaque click.
     this.cookies += 1;
-    // Par soucis de performance car les changements au DOM sont très lourd,
-    // On demande à la Window d'attendre la prochaine frame d'animation
-    // pour réaliser les changements.
     window.requestAnimationFrame(() => {
       this.updateScore();
     });
   };
+
+  // Achat d’un item dans la boutique.
+ onItemClick = (item, button) => {
+  console.log("Prix actuel :", item.prix, "| Cookies :", this.cookies);
+
+  if (this.cookies >= item.prix) {
+    this.cookies -= item.prix;
+    this.passiveGain += item.gainPassif;
+
+    // déclenche le setter (défini dans shop.js)
+    item.prix = item.prix;
+
+    // ——> mise à jour du texte du bouton :
+    button.innerText = `${item.name} - ${item.prix} cookies`;
+
+    window.requestAnimationFrame(() => this.updateScore());
+  } else {
+    alert("Vous n'avez pas assez de cookies !");
+  }
+};
 }

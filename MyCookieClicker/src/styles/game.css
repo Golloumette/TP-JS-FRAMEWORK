@@ -1,0 +1,58 @@
+#game{
+  display: flex;
+  flex:1;
+}
+
+
+@keyframes spinAndPulse {
+    0% {
+      transform: rotate(0deg) scale(1);
+      filter: brightness(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.1);
+      filter: brightness(1.1);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+      filter: brightness(1);
+    }
+  }
+  
+  #cookie {
+    animation: spinAndPulse 3s linear infinite;
+    transform-origin: center center;
+    will-change: transform;
+    cursor: pointer;
+  }
+
+	
+  #game-clickable-area.active {
+    transform: scale(1.2);
+    transition: transform 0.1s;
+  }
+#section_game{
+  display: flex;
+  flex : 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.golden-cookie {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  animation: fadeInOut 5s ease-in-out forwards;
+  cursor: pointer;
+  z-index: 100;
+}
+
+@keyframes fadeInOut {
+  0%   { opacity: 0; transform: scale(0.5); }
+  10%  { opacity: 1; transform: scale(1);   }
+  90%  { opacity: 1; }
+  100% { opacity: 0; transform: scale(0.5); }
+}
